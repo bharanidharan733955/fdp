@@ -5,6 +5,7 @@ const EventLogin = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
+    password: '',
     phone: '',
     organization: '',
     gender: '',
@@ -30,6 +31,8 @@ const EventLogin = () => {
     if (!formData.fullName.trim()) newErrors.fullName = 'Please enter your full name';
     if (!formData.email.trim()) newErrors.email = 'Please enter your email address';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Enter a valid email';
+    if (!formData.password) newErrors.password = 'Password is required';
+    else if (formData.password.length < 6) newErrors.password = 'Minimum 6 characters required';
     if (!formData.phone.trim()) newErrors.phone = 'Please enter your phone number';
     if (!formData.gender) newErrors.gender = 'Please select your gender';
     if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to the terms';
@@ -81,6 +84,7 @@ const EventLogin = () => {
           {[
             { label: 'Full Name', name: 'fullName', type: 'text', placeholder: 'Enter your full name' },
             { label: 'Email Address', name: 'email', type: 'email', placeholder: 'Enter your email address' },
+            { label: 'Password', name: 'password', type: 'password', placeholder: 'Enter a secure password' },
             { label: 'Phone Number', name: 'phone', type: 'tel', placeholder: 'Enter your phone number' },
             { label: 'Organization/College', name: 'organization', type: 'text', placeholder: 'Enter your organization or college' },
           ].map(({ label, name, type, placeholder }) => (
