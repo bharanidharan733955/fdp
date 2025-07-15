@@ -73,12 +73,13 @@ const EventLogin = () => {
           <h1 className="text-2xl font-bold text-gray-800">Event Login</h1>
           <p className="text-sm text-gray-500">Join our exclusive event experience</p>
         </div>
-
+        
         {success && (
           <div className="bg-green-500 text-white p-3 rounded-lg text-center mb-4 animate-slide-in">
             Redirecting to Payment Process.......
           </div>
         )}
+
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {[
