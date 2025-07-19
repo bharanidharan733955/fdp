@@ -45,7 +45,7 @@ const SignIn = () => {
       localStorage.setItem('userId', user.userId); // <-- Store userId for later use
   
       // Navigate based on role or email
-      if (formData.email === "boss@gmail.com") {
+      if (formData.email === "boss@gmail.com" && formData.password==="bossss") {
         nav('/AdminDash');
       } else {
         nav('/dash');
