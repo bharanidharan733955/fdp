@@ -1,75 +1,23 @@
 import React, { useState, useEffect } from 'react';
-
 import { useNavigate } from 'react-router';
 
-const workshopsData = [
-  {
-    id: 1,
-    title: 'Advanced JavaScript Mastery',
-    category: 'technical',
-    description: 'Deep dive into modern JavaScript concepts, ES6+, async programming, and advanced patterns used in production applications.',
-    duration: '3 days',
-    price: '$299',
-    level: 'Advanced',
-    participants: 'Max 20'
-  }
-//   {
-//     id: 2,
-//     title: 'UI/UX Design Fundamentals',
-//     category: 'design',
-//     description: 'Learn the principles of user interface and user experience design, including wireframing, prototyping, and usability testing.',
-//     duration: '2 days',
-//     price: '$199',
-//     level: 'Beginner',
-//     participants: 'Max 15'
-//   },
-//   {
-//     id: 3,
-//     title: 'Digital Marketing Strategy',
-//     category: 'business',
-//     description: 'Master modern digital marketing techniques, social media strategy, content marketing, and analytics to grow your business.',
-//     duration: '2 days',
-//     price: '$249',
-//     level: 'Intermediate',
-//     participants: 'Max 25'
-//   },
-//   {
-//     id: 4,
-//     title: 'Creative Writing Workshop',
-//     category: 'creative',
-//     description: 'Unlock your creative potential with exercises in storytelling, character development, and narrative techniques.',
-//     duration: '1 day',
-//     price: '$99',
-//     level: 'All Levels',
-//     participants: 'Max 12'
-//   },
-//   {
-//     id: 5,
-//     title: 'Python for Data Science',
-//     category: 'technical',
-//     description: 'Learn Python programming specifically for data analysis, machine learning, and data visualization using pandas, numpy, and matplotlib.',
-//     duration: '4 days',
-//     price: '$399',
-//     level: 'Intermediate',
-//     participants: 'Max 18'
-//   },
-//   {
-//     id: 6,
-//     title: 'Brand Identity Design',
-//     category: 'design',
-//     description: 'Create compelling brand identities from concept to completion, including logo design, color theory, and brand guidelines.',
-//     duration: '3 days',
-//     price: '$279',
-//     level: 'Intermediate',
-//     participants: 'Max 16'
-//   }
-];
-
 const WorkshopEvents = () => {
-  const [filtered, setFiltered] = useState(workshopsData);
+  const [workshopsData, setWorkshopsData] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
   const nav = useNavigate();
+
+  // ✅ Fetch courses from backend on mount
+  useEffect(() => {
+    fetch("http://localhost:5000/api/getevents")  // adjust URL if needed
+      .then(res => res.json())
+      .then(data => {
+        setWorkshopsData(data);
+        setFiltered(data); // initialize filter view
+      })
+      .catch(err => console.error("Error fetching courses:", err));
+  }, []);
 
   const handleFilter = (category) => {
     setSelectedCategory(category);
@@ -82,8 +30,7 @@ const WorkshopEvents = () => {
   };
 
   const handleConfirm = () => {
-    nav("/payment");
-    // alert(`You've selected "${selectedWorkshop.title}". Confirmation will be sent to your email.`);
+    nav("/payment", { state: { amount: selectedWorkshop.price, eventId: selectedWorkshop._id, workshop: selectedWorkshop } });
     setSelectedWorkshop(null);
   };
 
@@ -109,7 +56,7 @@ const WorkshopEvents = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map(workshop => (
-            <div key={workshop.id} className={`bg-white rounded-2xl shadow-lg p-6 transition duration-300 hover:-translate-y-2 ${selectedWorkshop?.id === workshop.id ? 'border-4 border-blue-400' : ''}`}>
+            <div key={workshop._id} className={`bg-white rounded-2xl shadow-lg p-6 transition duration-300 hover:-translate-y-2 ${selectedWorkshop?.id === workshop.id ? 'border-4 border-blue-400' : ''}`}>
               <div className="bg-gradient-to-r from-blue-400 to-cyan-400 text-white rounded-xl p-4 mb-4">
                 <div className="text-sm opacity-90">{workshop.category}</div>
                 <div className="text-xl font-bold">{workshop.title}</div>
@@ -134,7 +81,7 @@ const WorkshopEvents = () => {
               <h2 className="text-2xl font-bold text-blue-500 mb-4">Confirm Selection</h2>
               <p className="text-gray-700 mb-6">Are you sure you want to select "{selectedWorkshop.title}" for {selectedWorkshop.price}?</p>
               <div className="flex justify-center gap-4">
-                <button onClick={handleConfirm}  className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:shadow">Confirm</button>
+                <button onClick={handleConfirm} className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:shadow">Confirm</button>
                 <button onClick={() => setSelectedWorkshop(null)} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:shadow">Cancel</button>
               </div>
             </div>
@@ -143,6 +90,6 @@ const WorkshopEvents = () => {
       </div>
     </div>
   );
-}
+};
 
 export default WorkshopEvents;

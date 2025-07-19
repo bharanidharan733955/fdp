@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -23,20 +24,39 @@ const SignIn = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-
+  
     setLoading(true);
-    setTimeout(() => {
-      console.log('Signed in with:', formData);
-      setLoading(false);
-      if(formData.email == "boss@gmail.com" && formData.password == "bossss"){
+    // setError(''); // Optional: to clear previous errors
+  
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', {
+        email: formData.email,
+        password: formData.password
+      });
+  
+      const { token, user } = response.data;
+  
+      // Optional: store token for later (e.g., protected routes)
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('userId', user.userId); // <-- Store userId for later use
+  
+      // Navigate based on role or email
+      if (formData.email === "boss@gmail.com") {
         nav('/AdminDash');
-      }else{
+      } else {
         nav('/dash');
       }
-    }, 1500);
+  
+    } catch (err) {
+      const msg = err.response?.data?.message || "Login failed";
+      alert(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
