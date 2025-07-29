@@ -25,12 +25,9 @@ const WorkshopEvents = () => {
     else setFiltered(workshopsData.filter(w => w.category === category));
   };
 
-  const handleSelect = (workshop) => {
-    setSelectedWorkshop(workshop);
-  };
-
-  const handleConfirm = () => {
-    nav("/payment", { state: { amount: selectedWorkshop.price, eventId: selectedWorkshop._id, workshop: selectedWorkshop } });
+  const handleConfirm = (workshop) => {
+    nav("/payment", { state: { amount: workshop.price, eventId: workshop._id, workshop: workshop } });
+    console.log(workshop);
     setSelectedWorkshop(null);
   };
 
@@ -68,25 +65,14 @@ const WorkshopEvents = () => {
               </div>
               <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
                 <span>📊 {workshop.level}</span>
-                <span className="text-lg font-bold text-blue-500">{workshop.price}</span>
+                <span className="text-lg font-bold text-blue-500">₹{workshop.price}</span>
               </div>
-              <button onClick={() => handleSelect(workshop)} className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition">Proceed Payment</button>
+              <button onClick={() => handleConfirm(workshop)} className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition">Proceed Payment</button>
             </div>
           ))}
         </div>
 
-        {selectedWorkshop && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur z-50">
-            <div className="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full text-center">
-              <h2 className="text-2xl font-bold text-blue-500 mb-4">Confirm Selection</h2>
-              <p className="text-gray-700 mb-6">Are you sure you want to select "{selectedWorkshop.title}" for {selectedWorkshop.price}?</p>
-              <div className="flex justify-center gap-4">
-                <button onClick={handleConfirm} className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:shadow">Confirm</button>
-                <button onClick={() => setSelectedWorkshop(null)} className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:shadow">Cancel</button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Remove the Confirm Selection modal entirely */}
       </div>
     </div>
   );

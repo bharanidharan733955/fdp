@@ -6,7 +6,7 @@ const eventSchema = new mongoose.Schema({
     category: String,
     description: String,
     duration: String,
-    price: String,
+    price: Number,
     level: String,
     participants: String
 }, { collection: 'events_details' });
