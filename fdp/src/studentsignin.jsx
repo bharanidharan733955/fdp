@@ -75,7 +75,9 @@ const SignIn = () => {
       const { token, user } = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('userId', user.userId);
+      localStorage.setItem('userId', user.userId); // <-- Store userId for later use
+  
+      // Navigate based on role or email
       if (formData.email === "boss@gmail.com") {
         nav('/AdminDash');
       } else {
